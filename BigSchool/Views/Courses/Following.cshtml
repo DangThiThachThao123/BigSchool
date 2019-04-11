@@ -1,0 +1,43 @@
+﻿@using Microsoft.AspNet.Identity
+@using BigSchool.Models
+@model BigSchool.ViewModels.CoursesViewModel
+@{
+    ViewBag.Title = "Following";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Following</h2>
+
+<ul class="course">
+    @foreach (var course in Model.UpcommingFollowing)
+    {
+        <li>
+            <div class="details">
+                <span class="following">
+                    @course.Name
+                </span>
+                @if (Model.ShowAction)
+                {
+                    var User_ID = @User.Identity.GetUserId();
+                    ApplicationDbContext _dbContext = new ApplicationDbContext();
+                    bool isFollow = _dbContext.Followings.Any(a => a.FolloweeId == course.Id && a.FollowerId == User_ID);
+
+                    <div>
+                        @if (!isFollow)
+                        {
+                            <button class="btn btn-default btn-sm js-toggle-follow"
+                                    data-user-id="@course.Id">
+                                Follow
+                            </button>
+                        }
+                        else
+                        {
+                            <span class="text-danger">Following</span>
+                        }
+                    </div>
+                }
+
+            </div>
+        </li>
+    }
+</ul>
